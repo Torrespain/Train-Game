@@ -1,142 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Employee Data Management</title>
+	<title>Train-Train</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<!-- 
-	<link rel="stylesheet" type="text/css" href="assets/css/style.css"> -->
+
+	<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 </head>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 <body>
+<script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
 
 <div class="container">
-	<div class="container">
-  	<div class="jumbotron">
-    	<h1>Employee Data Management</h1> 
-   		<p>A Comprehensive Directory of Employee Billable Hours</p> 
-  	</div>
+	
+	<div class="jumbotron">
+		<h1>Train Schedule</h1> 
+	  <p>Welcome to your accurate Train Scheduler</p> 
 	</div>
+	
+  <div class="panel panel-default">
+  	<div class="panel-heading">Current Train Schedule</div>
+  	<div class="panel-body">
 
-	<div class="container">
-  	<div class="panel panel-default">
-    <div class="panel-heading">Curren Employees</div>
-    <div class="panel-body">
+			<table class="table table-striped" id="roster">
+			 <thead>
+	      <tr>
+			  	<th>Train Name</th>
+			    <th>Destination</th>
+			    <th>Frequency (min)</th>
+			    <th>Next Arrival</th>
+			    <th>Minutes Away</th>
+			  </tr>
+			 </thead>
+			 <tbody id="train-schedule">
 
-			<table class="table table-striped">
-    <thead>
-      <tr>
-		        <th>Employee Name</th>
-		        <th>Role</th>
-		        <th>Start Date</th>
-		        <th>Months Worked</th>
-		        <th>Monthly rate</th>
-		        <th>Total Billed </th>
-		      </tr>
-		    </thead>
-		    <tbody>
-		      <tr>
-		        <td id="name">John</td>
-		        <td id="role">Doe</td>
-		        <td id="date">john@example.com</td>
-		        <td id="mWorked">John</td>
-		        <td id="mRate">Doe</td>
-		        <td id="tBilled">Doe</td>
-		      </tr>
-		    </tbody>
-		  </table>
+			 </tbody>
+			</table>
 
+		</div>
+  </div>
+  
+  <div class="panel panel-default">
+  	<div class="panel-heading">
+      <h3 class="panel-title"><strong>Add Train</strong></h3>
     </div>
-  	</div>
-	</div>
-	<div class="container">
-  	<div class="panel panel-default">
-    <div class="panel-heading">Curren Employees</div>
     <div class="panel-body">
-    	
-			</div class= pannel>
-						<form>
-						  <div class ="form-group">
-						    <label for="text">Employee Name</label>
-						    <input type="text" class="form-control" id="pName" placeholder="John Smith">
-						  </div>
-
-						  <div class="form-group" id="p">
-						    <label for="text">Role</label>
-						    <input type="text" class="form-control" id="pRole" placeholder="John Smith">
-						  </div>
-
-						  <div class="form-group">
-						    <label for="text">Start date</label>
-						    <input type="text" class="form-control" id="pDate" placeholder="John Smith">
-						  </div>
-
-						  <div class="form-group">
-						    <label for="text">Monthly Rate</label>
-						    <input type="text" class="form-control" id="pRate" placeholder="John Smith">
-						  </div>
-
-						  <button class="btn btn-default" id="add-user" type="submit">Submit</button>
-						</form>			
-				</div>
-
-    </div>
-  	</div>
+	    <form>
+	      <div class="form-group">
+	      	<label for="employee-name-input">Train Name</label>
+	        <input class="form-control" id="name-input" type="text">
+	      </div>
+	      <div class="form-group">
+	      	<label for="role-input">Destination</label>
+	        <input class="form-control" id="destination-input" type="text">
+	      </div>
+	      <div class="form-group">
+	      	<label for="start-input">First Train Time</label>
+	        <input class="form-control" id="firstTrainTime-input" type="text" >
+	      </div>
+	      <div class="form-group">
+	        <label for="rate-input">Frequency (min)</label>
+	        <input class="form-control" id="frequency-input" type="number">
+	      </div>
+	      <button class="btn btn-default" id="add-train-btn" type="submit">Submit</button>
+	    </form>
+		</div>
 	</div>
-
 </div>
 
-
 <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
-<script type="text/javascript">
-	
-var config = {
- apiKey: "AIzaSyBIXwuFkVitzP-3jhkHEtcAGK7l3-h4zuk",
-    authDomain: "fir-time-3d1bf.firebaseapp.com",
-    databaseURL: "https://fir-time-3d1bf.firebaseio.com",
-    projectId: "fir-time-3d1bf",
-    storageBucket: "fir-time-3d1bf.appspot.com",
-    messagingSenderId: "1095060467631"
-  };
-
-
-firebase.initializeApp(config);
-
-var database = firebase.database();
-
-    // Capture Button Click
-   $("#add-user").on("click", function(event) {
-      // Don't refresh the page!
-      event.preventDefault();
-
-      // YOUR TASK!!!
-
-      // Code in the logic for storing and retrieving the most recent user.
-      var name=$("#pName").val().trim();
-      var email=$("#pRole").val().trim();
-      var age=$("#pDate").val().trim();
-      var rate=$("#pRate").val().trim();
-
-      console.log(name, email, age, rate)
-
-
-      // Don't forget to handle the "initial load"
-
-      database.ref().push({
-        name: name,
-        email: email,
-        age: age,
-        rate: rate
-      });
-    });
-
-
-
-
-</script>
-
-
-
+<script type="text/javascript" src="assets/javascript/app.js"></script>
 
 </body>
 </html>
