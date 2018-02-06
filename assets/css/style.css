@@ -1,0 +1,25 @@
+body{
+	 background-image: url(../images/background2.jpg); 
+	 background-size: cover;
+}
+h1{
+	margin-bottom: 20px;
+	opacity: 1;
+}
+.jumbotron{
+	text-align: center;
+	background: #e6e6e6;
+	opacity: 0.8;
+	color: black;
+	height: auto;
+
+}
+.panel{
+	background: #e6e6e6;
+	opacity: 0.94;
+	color: black;
+}
+.panel-heading{
+	font-weight: bold;
+
+}

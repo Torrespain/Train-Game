@@ -1,15 +1,5 @@
 $(document).ready(function(){
 
-
-
-
-// function actualMinutesTime(){
-// 	var actualMinutes=actualTime().slice(3,5);
-// 	return(parseInt(actualMinutes));
-// }
-
-
-
 var config = {
 	apiKey: "AIzaSyBIXwuFkVitzP-3jhkHEtcAGK7l3-h4zuk",
 	authDomain: "fir-time-3d1bf.firebaseapp.com",
@@ -41,77 +31,43 @@ $("#add-train-btn").on("click", function(event) {
 	  destination: destinationInput,
 	  frequency: frequencyInput,
 	  firstTrainTime: firstTrainTimeInput
-	  //, minutesAway: minutesAwayInput
   });
-
-  
+ 
 });
 
 database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
 
 	var remaining;
-	var diff=0;
-	var minutesAway=0;
+	var diff;
+	var minutesAway;
 
 	console.log(snapshot.val());
-  console.log(snapshot);
   var sv = snapshot.val();
 
 	var nameValue = (sv.name);
 	var destinationValue = (sv.destination);
 	var frequencyValue = (sv.frequency);
 	var firstTrainTimeValue = (sv.firstTrainTime);
-	console.log(nameValue,destinationValue,frequencyValue,firstTrainTimeValue);
 	
-	function difference(){
+	function difference(){			//returns the difference between the actual time and the first rain time
 		diff=moment().diff(moment(firstTrainTimeValue,"HH:mm A"),"m");
 		return(diff);
 	}
 
-	console.log(difference())
-	console.log(frequencyValue)
+	var modulo=difference()%frequencyValue; //We use modulo to calculate how much later the user arrived since the last train
+	var nextTrain=frequencyValue-modulo; //the difference will be how long is the wait for the next train
+	var arrivalTime=moment().add(nextTrain, "minuntes"); //Calculating the arrival time
+	arrivalTime=moment(arrivalTime).format("hh:mm A");	
 
-	var modulo=difference()%frequencyValue;
-	console.log(modulo);
-	var nextTrain=frequencyValue-modulo;
-	var arrivalTime=moment().add(nextTrain, "minuntes");
-	arrivalTime=moment(arrivalTime).format("hh:mm A");
-					
-         
+  //Prepending everything       
 	var tableString="<tr><td>"+nameValue+"</td><td>"+destinationValue+"</td><td>"+ "Train every: "+frequencyValue+"</td><td>"+arrivalTime+ "</td><td>"+nextTrain+" minutes</td></tr>";
 	$("#train-schedule").prepend(tableString);
+
+	var actualTime=moment().format("MM/DD/YYYY hh:mm A");
+	$("#actualTime").text("Last Time Updated: " + actualTime);
 
     }, function(errorObsject) {
       console.log("Errors handled: " + errorObject.code);
     });
 
 });
-
-
-
-// function convertTime(time){
-// 	var timeToMinutes=(time.slice(0,2))
-// 	console.log(timeToMinutes)
-// }
-// convertTime("11:35")
-/*
-Moment.js
-
-First time: 9am
-convert to unix
-
-Current time: 11.35
-conver to unix
-
-Diff = (current time - first time)
-convert difference in unix to minutes
-
-remainingMinutes=  dif modulo frequency
-
-arrival time=current time + remaining 
-
-Arrival= current + remaining
-
-
-
-*/
