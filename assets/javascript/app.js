@@ -1,24 +1,14 @@
 $(document).ready(function(){
 
 
-function actualTime(){
-	var actualTime = moment().utcOffset(240).format('HH:mm');
-	return (actualTime);
-}
-
-function actualMinutesTime(){
-	var actualMinutes=actualTime().slice(3,5);
-	return(parseInt(actualMinutes));
-}
-
-function timeToUnix(){
 
 
-//continue here
+// function actualMinutesTime(){
+// 	var actualMinutes=actualTime().slice(3,5);
+// 	return(parseInt(actualMinutes));
+// }
 
 
-
-}
 
 var config = {
 	apiKey: "AIzaSyBIXwuFkVitzP-3jhkHEtcAGK7l3-h4zuk",
@@ -58,6 +48,11 @@ $("#add-train-btn").on("click", function(event) {
 });
 
 database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
+
+	var remaining;
+	var diff=0;
+	var minutesAway=0;
+
 	console.log(snapshot.val());
   console.log(snapshot);
   var sv = snapshot.val();
@@ -66,30 +61,27 @@ database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", functi
 	var destinationValue = (sv.destination);
 	var frequencyValue = (sv.frequency);
 	var firstTrainTimeValue = (sv.firstTrainTime);
-	//var minutesAwayValue = (sv.minutesAway);
 	console.log(nameValue,destinationValue,frequencyValue,firstTrainTimeValue);
 	
-
-	function nextTrain(time){
- 		var minutes= parseInt(time.slice(3,5));
-
-		if (minutes<actualMinutesTime()) {
-			var math=actualMinutesTime()-minutes;
-			var difference= frequencyValue-math;
-			var remaining=frequencyValue+difference;
-			var arrivalTime=actualMinutesTime()+remaining;
-
+	function difference(){
+		diff=moment().diff(moment(firstTrainTimeValue,"HH:mm A"),"m");
+		return(diff);
 	}
-	console.log(remaining)
-	return(arrivalTime);
-}
 
-	nextTrain(firstTrainTimeValue);
+	console.log(difference())
+	console.log(frequencyValue)
 
-	var tableString="<tr><td>"+nameValue+"</td><td>"+destinationValue+"</td><td>"+frequencyValue+ "</td></tr>";
+	var modulo=difference()%frequencyValue;
+	console.log(modulo);
+	var nextTrain=frequencyValue-modulo;
+	var arrivalTime=moment().add(nextTrain, "minuntes");
+	arrivalTime=moment(arrivalTime).format("hh:mm A");
+					
+         
+	var tableString="<tr><td>"+nameValue+"</td><td>"+destinationValue+"</td><td>"+ "Train every: "+frequencyValue+"</td><td>"+arrivalTime+ "</td><td>"+nextTrain+" minutes</td></tr>";
 	$("#train-schedule").prepend(tableString);
 
-    }, function(errorObject) {
+    }, function(errorObsject) {
       console.log("Errors handled: " + errorObject.code);
     });
 
