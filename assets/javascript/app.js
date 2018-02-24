@@ -35,14 +35,14 @@ $("#add-train-btn").on("click", function(event) {
  
 });
 
-database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
+database.ref().orderByChild("dateAdded").on("child_added", function(snapshot) {
 
 	var remaining;
 	var diff;
 	var minutesAway;
 
 	console.log(snapshot.val());
-  var sv = snapshot.val();
+  	var sv = snapshot.val();
 
 	var nameValue = (sv.name);
 	var destinationValue = (sv.destination);
